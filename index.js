@@ -18,6 +18,15 @@ document.addEventListener("DOMContentLoaded",() => {
 
         // if(ballx>700-20 || ballx<=0)dx*=-1;
         // if(bally>400-20 || bally<=0)dy*=-1;
+
+        if(ballx < paddle.offsetLeft + paddle.offsetWidth &&
+            bally > paddle.offsetTop &&
+            bally + ball.offsetHeight < paddle.offsetTop + paddle.offsetHeight
+        ){
+            dx*= -1
+        }
+
+
         if(ballx > table.offsetWidth - ball.offsetWidth || ballx<=0) dx*=-1;
         if(bally > table.offsetHeight - ball.offsetHeight || bally<=0) dy*=-1;
 
@@ -26,18 +35,28 @@ document.addEventListener("DOMContentLoaded",() => {
 
 
      let paddleY = 0;
-     let pdy = 5;
+     let pdy = 10;
 
      document.addEventListener('keydown',(event) => {
+        event.preventDefault()
         if(event.keyCode == 38 && paddleY > 0 ){
-            paddleY += (-1)*pdy;;
+            paddleY += (-1)*pdy;
             console.log("up",paddleY)
         }else if(event.keyCode == 40 && paddleY < table.offsetHeight - paddle.offsetHeight){
             paddleY += pdy;
 
         }
         paddle.style.top = `${paddleY}px`;
-     })
+     });
 
+
+     document.addEventListener("mousemove", (event) => {
+        let mouseDistanceFromTop = event.clientY;
+        let distanceOfTableFromTop = table.offsetTop;
+        let mousePointControl = mouseDistanceFromTop - distanceOfTableFromTop - paddle.offsetHeight/2;
+        paddleY= mousePointControl;
+        if(paddleY <= 0 || paddleY > table.offsetHeight - paddle.offsetHeight)return;
+        paddle.style.top = `${paddleY}px`;
+     })
      
 });
